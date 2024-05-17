@@ -109,7 +109,8 @@
                                 </div>
                                 <!-- Submit Button-->
                                 <div class="d-grid">
-                                    <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+                                    <button id="submitButton" class="btn btn-primary btn-lg"
+                                        type="submit">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -140,7 +141,12 @@
     <script>
         $("#contactForm").submit(function (e) {
             e.preventDefault();
-            let data = $(this).serialize();
+
+            let $submitButton = $("#submitButton");
+            let $form = $(this);
+            $submitButton.prop("disabled", true).text("Sending...");
+
+            let data = $form.serialize();
             let params = new URLSearchParams(data);
             let config = {};
             for (const [key, value] of params.entries()) {
@@ -154,17 +160,18 @@
                         text: "Message sent successfully!",
                         icon: "success"
                     });
-
+                    $form[0].reset();
+                    $submitButton.prop("disabled", false).text("Submit");
                 }, function (error) {
                     Swal.fire({
                         title: "Error",
                         text: "Failed to send message!",
-                        icon: "success"
+                        icon: "error"
                     });
+                    $submitButton.prop("disabled", false).text("Submit");
                 });
-
-
         });
+
 
     </script>
 </body>
